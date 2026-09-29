@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# Magento 2 test store on Kali Linux (rolling) — VirtualBox
+#
+# Storefront + admin : http://localhost:8080  (guest port 80)
+# MySQL/MariaDB      : 127.0.0.1:3306        (guest port 3306)
+#
+# This is the minimal, Magento-only Vagrantfile derived from the one used for
+# the POC (see Vagrantfile.aiprj-original for the full version, which also ran
+# an unrelated Node.js booking app on host port 8081).
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "kalilinux/rolling"
+  config.vm.box_version = "2026.2.0"
+
+  # Magento storefront + admin
+  config.vm.network "forwarded_port", guest: 80,   host: 8080, host_ip: "127.0.0.1", auto_correct: true
+
+  # MySQL/MariaDB (optional, for host-side DB access)
+  config.vm.network "forwarded_port", guest: 3306, host: 3306, host_ip: "127.0.0.1", auto_correct: true
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 4096
+    vb.cpus   = 4
+  end
+end
